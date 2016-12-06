@@ -2,7 +2,7 @@ using System.Data;
 using System.Data.SqlClient;
 
 
-namespace ToDoList
+namespace ToDoList.Objects
 {
   public class DB
   {
