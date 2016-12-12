@@ -82,23 +82,6 @@ namespace ToDoList
     }
 
     [Fact]
-    public void Test_GetTasks_RetrievesAllTasksWithCategory()
-    {
-      Category testCategory = new Category("Household chores");
-      testCategory.Save();
-
-      Task firstTask = new Task("Mow the lawn", testCategory.GetId(), "01-01-17");
-      firstTask.Save();
-      Task secondTask = new Task("Do the dishes", testCategory.GetId(), "01-01-17");
-      secondTask.Save();
-
-      List<Task> testTaskList = new List<Task> {firstTask, secondTask};
-      List<Task> resultTaskList = testCategory.GetTasks();
-
-      Assert.Equal(testTaskList, resultTaskList);
-    }
-
-    [Fact]
     public void Test_Update_UpdatesCategoryInDatabase()
     {
       //Arrange
@@ -115,6 +98,26 @@ namespace ToDoList
       Assert.Equal(newName, result);
     }
 
+    [Fact]
+    public void Test_Delete_DeletesCategoryFromDatabase()
+    {
+      //Arrange
+      string name1 = "Home stuff";
+      Category testCategory1 = new Category(name1);
+      testCategory1.Save();
+
+      string name2 = "Work stuff";
+      Category testCategory2 = new Category(name2);
+      testCategory2.Save();
+
+      //Act
+      testCategory1.Delete();
+      List<Category> resultCategories = Category.GetAll();
+      List<Category> testCategoryList = new List<Category> {testCategory2};
+
+      //Assert
+      Assert.Equal(testCategoryList, resultCategories);
+    }
     public void Dispose()
     {
       Task.DeleteAll();

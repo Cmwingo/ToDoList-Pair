@@ -96,9 +96,8 @@ namespace ToDoList.Objects
       {
         int taskId = rdr.GetInt32(0);
         string taskDescription = rdr.GetString(1);
-        int taskCategoryId = rdr.GetInt32(2);
-        string taskDueDate = rdr.GetString(3);
-        Task newTask = new Task(taskDescription, taskCategoryId, taskDueDate, taskId);
+        string taskDueDate = rdr.GetString(2);
+        Task newTask = new Task(taskDescription, taskDueDate, taskId);
         tasks.Add(newTask);
       }
       if(rdr != null)
@@ -167,6 +166,26 @@ namespace ToDoList.Objects
         rdr.Close();
       }
       if(conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public void Delete()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM categories WHERE id = @CategoryId;", conn);
+
+      SqlParameter categoryIdParameter = new SqlParameter();
+      categoryIdParameter.ParameterName = "@CategoryId";
+      categoryIdParameter.Value = this.GetId();
+
+      cmd.Parameters.Add(categoryIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
       {
         conn.Close();
       }
