@@ -118,6 +118,75 @@ namespace ToDoList
       //Assert
       Assert.Equal(testCategoryList, resultCategories);
     }
+
+    [Fact]
+    public void Test_AddTask_AddsTaskToCategory()
+    {
+      //Arrange
+      Category testCategory = new Category("Household chores");
+      testCategory.Save();
+
+      Task testTask = new Task("Mow the lawn", "01-01-17");
+      testTask.Save();
+
+      Task testTask2 = new Task("Water the garden", "01-01-17");
+      testTask2.Save();
+
+      //Act
+      testCategory.AddTask(testTask);
+      testCategory.AddTask(testTask2);
+
+      List<Task> result = testCategory.GetTasks();
+      List<Task> testList = new List<Task>{testTask, testTask2};
+
+      //Assert
+      Assert.Equal(testList, result);
+    }
+
+    [Fact]
+    public void Test_GetTasks_ReturnsAllCategoryTasks()
+    {
+      //Arrange
+      Category testCategory = new Category("Household chores");
+      testCategory.Save();
+
+      Task testTask1 = new Task("Mow the lawn", "01-01-17");
+      testTask1.Save();
+
+      Task testTask2 = new Task("Buy plane ticket", "01-01-17");
+      testTask2.Save();
+
+      //Act
+      testCategory.AddTask(testTask1);
+      List<Task> savedTasks = testCategory.GetTasks();
+      List<Task> testList = new List<Task> {testTask1};
+
+      //Assert
+      Assert.Equal(testList, savedTasks);
+    }
+
+    [Fact]
+    public void Test_Delete_DeletesCategoryAssociationsFromDatabase()
+    {
+      //Arrange
+      Task testTask = new Task("Mow the lawn", "01-01-17");
+      testTask.Save();
+
+      string testName = "Home stuff";
+      Category testCategory = new Category(testName);
+      testCategory.Save();
+
+      //Act
+      testCategory.AddTask(testTask);
+      testCategory.Delete();
+
+      List<Category> resultTaskCategories = testTask.GetCategories();
+      List<Category> testTaskCategories = new List<Category> {};
+
+      //Assert
+      Assert.Equal(testTaskCategories, resultTaskCategories);
+    }
+
     public void Dispose()
     {
       Task.DeleteAll();
